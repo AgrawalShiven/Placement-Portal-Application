@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body text-center">
+                <h5 class="card-title">Admin Panel</h5>
+                <p class="text-muted">
+                    {{ current_user.email }}
+                </p>
+            </div>
+        </div>
+
+        <div class="list-group shadow-sm">
+            <a href="/admin/companies"
+               class="list-group-item list-group-item-action">
+                Manage Companies
+            </a>
+            <a href="/admin/students"
+               class="list-group-item list-group-item-action">
+                Manage Students
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        {% block admin_content %}{% endblock %}
+    </div>
+
+</div>
+{% endblock %}

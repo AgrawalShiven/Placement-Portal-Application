@@ -1,0 +1,63 @@
+{% extends "admin.html" %}
+
+{% block title %}Manage Companies{% endblock %}
+
+{% block admin_content %}
+<h3>Company Registrations</h3>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Company Name</th>
+            <th>Email</th>
+            <th>HR Contact</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for company in companies %}
+        <tr>
+            <td>{{ company.id }}</td>
+            <td>{{ company.company_name }}</td>
+            <td>{{ company.user.email }}</td>
+            <td>{{ company.hr_contact }}</td>
+            <td>
+                {% if company.status == "Pending" %}
+                    <span class="badge bg-warning">Pending</span>
+                {% elif company.status == "Approved" %}
+                    <span class="badge bg-success">Approved</span>
+                {% elif company.blacklisted %}
+                    <span class="badge bg-black">Blacklisted</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if company.status == "Pending" %}
+                    <form method="POST"
+                          action="/admin/companies/approve/{{ company.id }}">
+                        <button class="btn btn-sm btn-success">
+                            Approve
+                        </button>
+                    </form>
+                {% elif company.status == "Approved" %}
+                    <form method="POST"
+                          action="/admin/companies/blacklist/{{ company.id }}">
+                        <button class="btn btn-sm btn-danger">
+                            Blacklist
+                        </button>
+                    </form>
+                {% elif company.blacklisted %}
+                <form method="POST"
+                        action="/admin/companies/unblacklist/{{ company.id }}">
+                    <button class="btn btn-sm btn-secondary">
+                        Unblacklist
+                    </button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "admin.html" %}
+
+{% block title %}Manage Students{% endblock %}
+
+{% block admin_content %}
+<h3 class="mb-3">Registered Students</h3>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students %}
+        <tr>
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.user.email }}</td>
+            <td>
+                {% if student.status == "Pending" %}
+                    <span class="badge bg-warning">Pending</span>
+                {% elif student.status == "Approved" %}
+                    <span class="badge bg-success">Approved</span>
+                {% elif student.blacklisted %}
+                    <span class="badge bg-black">Blacklisted</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if student.status == "Pending" %}
+                    <form method="POST"
+                          action="/admin/students/approve/{{ student.id }}">
+                        <button class="btn btn-sm btn-success">
+                            Approve
+                        </button>
+                    </form>
+                {% elif student.status == "Approved" %}
+                    <form method="POST"
+                          action="/admin/students/blacklist/{{ student.id }}">
+                        <button class="btn btn-sm btn-danger">
+                            Blacklist
+                        </button>
+                    </form>
+                {% elif student.blacklisted %}
+                    <form method="POST"
+                          action="/admin/students/unblacklist/{{ student.id }}">
+                        <button class="btn btn-sm btn-secondary">
+                            Unblacklist
+                        </button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
