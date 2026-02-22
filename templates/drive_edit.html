@@ -1,0 +1,57 @@
+{% extends "index.html" %}
+
+{% block title %}Edit Drive{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-3">Edit Placement Drive</h3>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <script>
+             alert("{{ category.title() }}: {{ message }}");
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<form method="POST" class="card p-4 shadow-sm">
+
+    <div class="mb-3">
+        <label class="form-label">Job Title</label>
+        <input type="text"
+               name="job_title"
+               value="{{ drive.job_title }}"
+               class="form-control"
+               required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Job Description</label>
+        <textarea name="job_description"
+                  class="form-control"
+                  rows="4">{{ drive.job_description }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Eligibility</label>
+        <input type="text"
+               name="eligibility"
+               value="{{ drive.eligibility }}"
+               class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Deadline</label>
+        <input type="date"
+               name="deadline"
+               value="{{ drive.deadline }}"
+               class="form-control">
+    </div>
+
+    <button class="btn btn-success">
+        Update
+    </button>
+
+</form>
+
+{% endblock %}

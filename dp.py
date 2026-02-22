@@ -1,7 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from datetime import datetime
+import pytz
 
+india_timezone = pytz.timezone('Asia/Kolkata')
 db = SQLAlchemy()
 
 
@@ -59,8 +61,9 @@ class PlacementDrive(db.Model):
     job_description = db.Column(db.String(2000))
     eligibility = db.Column(db.String(2000))
     deadline = db.Column(db.Date)
-    status = db.Column(db.String(20), default="Pending")
-
+    status = db.Column(db.String(20), default="Open")
+    company = db.relationship("Company", backref="drives")
+    applications = db.relationship("Application", backref="drive", cascade="all, delete" )
 
 class Application(db.Model):
     __tablename__ = "applications"
@@ -72,9 +75,9 @@ class Application(db.Model):
     drive_id = db.Column(
         db.Integer, db.ForeignKey("placement_drives.id"), nullable=False
     )
-    appl_date = db.Column(db.DateTime, default=datetime.utcnow)
+    appl_date = db.Column(db.DateTime, default=datetime.now(india_timezone))
     status = db.Column(db.String(20), default="Applied")
-
+    student = db.relationship("Student", backref="applications")
     __table_args__ = (
         db.UniqueConstraint("student_id", "drive_id"),
     )

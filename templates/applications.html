@@ -1,0 +1,74 @@
+{% extends "index.html" %}
+
+{% block title %}Drive Applications{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-3">
+    Applications for: {{ drive.job_title }}
+</h3>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<script>
+    alert("{{ category.title() }}: {{ message }}");
+</script>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<a href="/dashboard" class="btn btn-secondary mb-3">
+    Back to Dashboard
+</a>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Applied On</th>
+            <th>Status</th>
+            <th>Update Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.student.name }}</td>
+            <td>{{ application.student.user.email }}</td>
+            <td>{{ application.appl_date.strftime('%Y-%m-%d') }}</td>
+            <td>
+                {% if application.status == "Applied" %}
+                <span class="badge bg-info">Applied</span>
+                {% elif application.status == "Shortlisted" %}
+                <span class="badge bg-warning">Shortlisted</span>
+                {% elif application.status == "Selected" %}
+                <span class="badge bg-success">Selected</span>
+                {% elif application.status == "Rejected" %}
+                <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+            </td>
+            <td>
+                <form method="POST" action="/company/applications/update/{{ application.id }}">
+                    <select name="status" class="form-select form-select-sm mb-1">
+                        <option value="Applied">Applied</option>
+                        <option value="Shortlisted">Shortlisted</option>
+                        <option value="Selected">Selected</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                    <button class="btn btn-sm btn-primary">
+                        Update
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" class="text-center">
+                No applications yet
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

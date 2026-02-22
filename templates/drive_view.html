@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+
+{% block title %}Drive Details{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-3">Placement Drive Details</h3>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <script>
+             alert("{{ category.title() }}: {{ message }}");
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<div class="card p-4 shadow-sm">
+    <h4>{{ drive.job_title }}</h4>
+
+    <p><strong>Description:</strong></p>
+    <p>{{ drive.job_description }}</p>
+
+    <p><strong>Eligibility:</strong></p>
+    <p>{{ drive.eligibility }}</p>
+
+    <p><strong>Deadline:</strong> {{ drive.deadline }}</p>
+
+    <p><strong>Status:</strong> {{ drive.status }}</p>
+
+    <a href="/dashboard"
+       class="btn btn-secondary mt-3">
+        Back
+    </a>
+
+</div>
+
+{% endblock %}

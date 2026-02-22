@@ -1,0 +1,101 @@
+{% extends "index.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-3">Student Dashboard</h3>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <script>
+             alert("{{ category.title() }}: {{ message }}");
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">{{ student.name }}</h5>
+        <p class="mb-0"><strong>Email:</strong> {{ student.user.email }}</p>
+    </div>
+</div>
+
+<h5>Available Placement Drives</h5>
+
+<table class="table table-bordered mb-4">
+    <thead class="table-dark">
+        <tr>
+            <th>Company</th>
+            <th>Job Title</th>
+            <th>Deadline</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for drive in drives %}
+        <tr>
+            <td>{{ drive.company.company_name }}</td>
+            <td>{{ drive.job_title }}</td>
+            <td>{{ drive.deadline }}</td>
+            <td>
+                <form method="POST"
+                      action="/student/apply/{{ drive.id }}">
+                    <button class="btn btn-sm btn-primary">
+                        Apply
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center">
+                No approved drives available
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h5>Your Applications</h5>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Company</th>
+            <th>Job Title</th>
+            <th>Status</th>
+            <th>Applied On</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.drive.company.company_name }}</td>
+            <td>{{ application.drive.job_title }}</td>
+            <td>
+                {% if application.status == "Applied" %}
+                    <span class="badge bg-info">Applied</span>
+                {% elif application.status == "Shortlisted" %}
+                    <span class="badge bg-warning">Shortlisted</span>
+                {% elif application.status == "Selected" %}
+                    <span class="badge bg-success">Selected</span>
+                {% elif application.status == "Rejected" %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+            </td>
+            <td>{{ application.appl_date.strftime('%Y-%m-%d %H:%M') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center">
+                No applications yet
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
