@@ -1,0 +1,77 @@
+{% extends "admin.html" %}
+
+{% block title %}Manage Drives{% endblock %}
+
+{% block admin_content %}
+<h3>Placement Drives</h3>
+<form method="GET" action="/admin/drives" class="d-flex gap-2 mb-3">
+    <input
+        type="text"
+        name="q"
+        value="{{ search_query if search_query else '' }}"
+        class="form-control"
+        placeholder="Search by ID, job title, company, or status">
+    <button class="btn btn-primary" type="submit">Search</button>
+    <a href="/admin/drives" class="btn btn-outline-secondary">Clear</a>
+</form>
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Company</th>
+            <th>Job Title</th>
+            <th>Deadline</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for drive in drives %}
+        <tr>
+            <td>{{ drive.id }}</td>
+            <td>{{ drive.company.company_name }}</td>
+            <td>{{ drive.job_title }}</td>
+            <td>{{ drive.deadline }}</td>
+            <td>
+                {% if drive.status == "Pending" %}
+                <span class="badge bg-warning">Pending</span>
+                {% elif drive.status == "Open" %}
+                <span class="badge bg-success">Approved/Open</span>
+                {% elif drive.status == "Closed" %}
+                <span class="badge bg-secondary">Closed</span>
+                {% elif drive.status == "Rejected" %}
+                <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if drive.status == "Pending" %}
+                <form method="POST" action="/admin/drives/approve/{{ drive.id }}">
+                    <button class="btn btn-sm btn-success">Approve</button>
+                </form>
+                <form method="POST" action="/admin/drives/reject/{{ drive.id }}" style="display:inline;">
+                    <button class="btn btn-sm btn-outline-danger">Reject</button>
+                </form>
+                {% elif drive.status == "Rejected" %}
+                <form method="POST" action="/admin/drives/approve/{{ drive.id }}">
+                    <button class="btn btn-sm btn-success">Approve</button>
+                </form>
+                {% endif %}
+                <a href="/admin/drives/edit/{{ drive.id }}" class="btn btn-sm btn-info">Edit</a>
+                <form method="POST" action="/admin/drives/delete/{{ drive.id }}" style="display:inline;">
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this drive and all its applications?');">
+                        Delete
+                    </button>
+                </form>
+                <a href="/admin/drives/{{ drive.id }}/applications" class="btn btn-sm btn-secondary">
+                    View Applicants
+                </a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="text-center">No drives found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

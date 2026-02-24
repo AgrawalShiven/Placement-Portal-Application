@@ -1,0 +1,49 @@
+{% extends "admin.html" %}
+
+{% block title %}Edit Company{% endblock %}
+
+{% block admin_content %}
+<h3 class="mb-3">Edit Company</h3>
+
+<form method="POST" class="card p-4 shadow-sm">
+    <div class="mb-3">
+        <label class="form-label">Company Name</label>
+        <input type="text" name="company_name" value="{{ company.company_name }}" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" value="{{ company.user.email }}" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">HR Contact</label>
+        <input type="text" name="hr_contact" value="{{ company.hr_contact }}" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Website</label>
+        <input type="text" name="website" value="{{ company.website }}" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select" {% if company.blacklisted %}disabled{% endif %}>
+            <option value="Pending" {% if company.status == "Pending" %}selected{% endif %}>Pending</option>
+            <option value="Approved" {% if company.status == "Approved" %}selected{% endif %}>Approved</option>
+        </select>
+    </div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="blacklisted" name="blacklisted" {% if company.blacklisted %}checked{% endif %}>
+        <label class="form-check-label" for="blacklisted">
+            Blacklisted
+        </label>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button class="btn btn-success" type="submit">Update Company</button>
+        <a href="/admin/companies" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

@@ -5,6 +5,9 @@
 {% block content %}
 
 <h3 class="mb-3">Student Dashboard</h3>
+<div class="mb-3">
+    <a href="/student/profile/edit" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+</div>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -15,7 +18,17 @@
         {% endfor %}
     {% endif %}
 {% endwith %}
+{% if student.blacklisted %}
+<div class="alert alert-danger">
+    Your account has been blacklisted. Please contact support.
+</div>
 
+{% elif student.status == "Pending" %}
+<div class="alert alert-warning">
+    Your account is pending admin approval. Please wait.
+</div>
+
+{% else %}
 <div class="card mb-4">
     <div class="card-body">
         <h5 class="card-title">{{ student.name }}</h5>
@@ -97,5 +110,5 @@
         {% endfor %}
     </tbody>
 </table>
-
+{% endif %}
 {% endblock %}

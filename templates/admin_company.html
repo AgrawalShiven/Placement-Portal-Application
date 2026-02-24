@@ -4,6 +4,16 @@
 
 {% block admin_content %}
 <h3>Company Registrations</h3>
+<form method="GET" action="/admin/companies" class="d-flex gap-2 mb-3">
+    <input
+        type="text"
+        name="q"
+        value="{{ search_query if search_query else '' }}"
+        class="form-control"
+        placeholder="Search by ID, company name, email, HR contact">
+    <button class="btn btn-primary" type="submit">Search</button>
+    <a href="/admin/companies" class="btn btn-outline-secondary">Clear</a>
+</form>
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
 {% for category, message in messages %}
@@ -36,20 +46,28 @@
                 <span class="badge bg-warning">Pending</span>
                 {% elif company.status == "Approved" %}
                 <span class="badge bg-success">Approved</span>
+                {% elif company.status == "Rejected" %}
+                <span class="badge bg-danger">Rejected</span>
                 {% elif company.blacklisted %}
                 <span class="badge bg-black">Blacklisted</span>
                 {% endif %}
             </td>
             <td>
+                <div class="d-flex flex-row gap-1">
                 {% if company.status == "Pending" %}
                 <form method="POST" action="/admin/companies/approve/{{ company.id }}">
                     <button class="btn btn-sm btn-success">
                         Approve
                     </button>
                 </form>
+                <form method="POST" action="/admin/companies/reject/{{ company.id }}">
+                    <button class="btn btn-sm btn-outline-danger">
+                        Reject
+                    </button>
+                </form>
                 {% elif company.status == "Approved" %}
                 <form method="POST" action="/admin/companies/blacklist/{{ company.id }}">
-                    <button class="btn btn-sm btn-danger">
+                    <button class="btn btn-sm bg-black text-white">
                         Blacklist
                     </button>
                 </form>
@@ -59,7 +77,23 @@
                         Unblacklist
                     </button>
                 </form>
+                {% elif company.status == "Rejected" %}
+                <form method="POST" action="/admin/companies/approve/{{ company.id }}">
+                    <button class="btn btn-sm btn-success">
+                        Approve
+                    </button>
+                </form>
                 {% endif %}
+                <a href="/admin/companies/edit/{{ company.id }}" class="btn btn-sm btn-info">
+                    Edit
+                </a>
+                <form method="POST" action="/admin/companies/delete/{{ company.id }}" >
+                    <button class="btn btn-sm btn-danger"
+                            onclick="return confirm('Delete this company, its drives, and all related applications?');">
+                        Delete
+                    </button>
+                </form>
+                </div>
             </td>
         </tr>
         {% endfor %}

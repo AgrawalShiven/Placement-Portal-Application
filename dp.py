@@ -61,7 +61,7 @@ class PlacementDrive(db.Model):
     job_description = db.Column(db.String(2000))
     eligibility = db.Column(db.String(2000))
     deadline = db.Column(db.Date)
-    status = db.Column(db.String(20), default="Open")
+    status = db.Column(db.String(20), default="Pending")
     company = db.relationship("Company", backref="drives")
     applications = db.relationship("Application", backref="drive", cascade="all, delete" )
 

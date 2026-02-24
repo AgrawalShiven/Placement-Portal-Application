@@ -16,7 +16,7 @@
 {% endfor %}
 {% endif %}
 {% endwith %}
-<a href="/dashboard" class="btn btn-secondary mb-3">
+<a href="{{ back_url if back_url else '/dashboard' }}" class="btn btn-secondary mb-3">
     Back to Dashboard
 </a>
 
@@ -48,12 +48,12 @@
                 {% endif %}
             </td>
             <td>
-                <form method="POST" action="/company/applications/update/{{ application.id }}">
+                <form method="POST" action="{{ update_status_url }}/{{ application.id }}">
                     <select name="status" class="form-select form-select-sm mb-1">
-                        <option value="Applied">Applied</option>
-                        <option value="Shortlisted">Shortlisted</option>
-                        <option value="Selected">Selected</option>
-                        <option value="Rejected">Rejected</option>
+                        <option value="Applied" {% if application.status == "Applied" %}selected{% endif %}>Applied</option>
+                        <option value="Shortlisted" {% if application.status == "Shortlisted" %}selected{% endif %}>Shortlisted</option>
+                        <option value="Selected" {% if application.status == "Selected" %}selected{% endif %}>Selected</option>
+                        <option value="Rejected" {% if application.status == "Rejected" %}selected{% endif %}>Rejected</option>
                     </select>
                     <button class="btn btn-sm btn-primary">
                         Update

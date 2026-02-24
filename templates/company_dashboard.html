@@ -4,6 +4,9 @@
 
 {% block content %}
 <h3 class="mb-3">Company Dashboard</h3>
+<div class="mb-3">
+    <a href="/company/profile/edit" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+</div>
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
 {% for category, message in messages %}
@@ -59,7 +62,17 @@
         <tr>
             <td>{{ drive.id }}</td>
             <td>{{ drive.job_title }}</td>
-            <td>{{ drive.status }}</td>
+            <td>
+                {% if drive.status == "Pending" %}
+                <span class="badge bg-warning">Pending Approval</span>
+                {% elif drive.status == "Open" %}
+                <span class="badge bg-success">Open</span>
+                {% elif drive.status == "Closed" %}
+                <span class="badge bg-secondary">Closed</span>
+                {% else %}
+                {{ drive.status }}
+                {% endif %}
+            </td>
             <td>{{ drive.deadline }}</td>
             <td>
                 <a href="/company/drives/{{ drive.id }}" class="btn btn-sm btn-info">
