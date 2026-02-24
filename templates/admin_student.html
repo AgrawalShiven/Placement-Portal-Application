@@ -14,15 +14,6 @@
     <button class="btn btn-primary" type="submit">Search</button>
     <a href="/admin/students" class="btn btn-outline-secondary">Clear</a>
 </form>
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
-<script>
-    alert("{{ category.title() }}: {{ message }}");
-</script>
-{% endfor %}
-{% endif %}
-{% endwith %}
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
         <tr>
