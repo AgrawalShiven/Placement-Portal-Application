@@ -44,11 +44,12 @@
                 {% endif %}
             </td>
             <td>
+                <div class="d-flex flex-row gap-1"> 
                 {% if drive.status == "Pending" %}
                 <form method="POST" action="/admin/drives/approve/{{ drive.id }}">
                     <button class="btn btn-sm btn-success">Approve</button>
                 </form>
-                <form method="POST" action="/admin/drives/reject/{{ drive.id }}" style="display:inline;">
+                <form method="POST" action="/admin/drives/reject/{{ drive.id }}">
                     <button class="btn btn-sm btn-outline-danger">Reject</button>
                 </form>
                 {% elif drive.status == "Rejected" %}
@@ -57,7 +58,7 @@
                 </form>
                 {% endif %}
                 <a href="/admin/drives/edit/{{ drive.id }}" class="btn btn-sm btn-info">Edit</a>
-                <form method="POST" action="/admin/drives/delete/{{ drive.id }}" style="display:inline;">
+                <form method="POST" action="/admin/drives/delete/{{ drive.id }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this drive and all its applications?');">
                         Delete
                     </button>
@@ -65,6 +66,7 @@
                 <a href="/admin/drives/{{ drive.id }}/applications" class="btn btn-sm btn-secondary">
                     View Applicants
                 </a>
+                </div>
             </td>
         </tr>
         {% else %}

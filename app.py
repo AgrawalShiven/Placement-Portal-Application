@@ -67,6 +67,8 @@ def update_status_for_drives(drives):
     for drive in drives:
         if drive.status == "Open" and drive.deadline < today:
             drive.status = "Closed"
+        if drive.status == "Closed" and drive.deadline > today:
+            drive.status = "Open"
     db.session.commit()
 
 @app.route('/dashboard')
@@ -437,6 +439,7 @@ def admin_drives():
 
     drives = query.order_by(PlacementDrive.deadline.desc()).all()
     update_status_for_drives(drives)
+    drives = query.order_by(PlacementDrive.deadline.desc()).all()
     return render_template(
         "admin_drive.html",
         drives=drives,
@@ -901,4 +904,4 @@ def update_application_status(application_id):
         f"/company/drives/{application.drive_id}/applications"
     )
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5001,debug=True)
